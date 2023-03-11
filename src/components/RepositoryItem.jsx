@@ -1,85 +1,120 @@
-import { View, StyleSheet, Image } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
+
+import theme from '../theme';
 import Text from './Text';
+import formatInThousands from '../utils/formatInThousands';
+
 const styles = StyleSheet.create({
-  itemContainer: {
+  container: {
     backgroundColor: 'white',
+    padding: 15,
   },
-  itemContent: {
-    display: 'flex',
+  topContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    marginBottom: 15,
   },
-  itemScore: {
-    display: 'flex',
+  bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
   },
-
-  description: {
-    maxWidth: 300,
+  avatarContainer: {
+    flexGrow: 0,
+    marginRight: 20,
   },
-  ownerAvatar: {
-    width: 50,
-    height: 50,
-    margin: 10,
+  contentContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  nameText: {
+    marginBottom: 5,
+  },
+  descriptionText: {
+    flexGrow: 1,
+  },
+  avatar: {
+    width: 45,
+    height: 45,
+    borderRadius: theme.roundness,
+  },
+  countItem: {
+    flexGrow: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+  },
+  countItemCount: {
+    marginBottom: 5,
+  },
+  languageContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+  languageText: {
+    color: 'white',
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.roundness,
+    flexGrow: 0,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
   },
 });
 
-const SubHeadText = ({ ...props }) => (
-  <Text fontSize="subheading" fontWeight="bold" {...props} />
-);
+const CountItem = ({ label, count }) => {
+  return (
+    <View style={styles.countItem}>
+      <Text style={styles.countItemCount} fontWeight="bold">
+        {formatInThousands(count)}
+      </Text>
+      <Text color="textSecondary">{label}</Text>
+    </View>
+  );
+};
 
-const LanguageText = ({ ...props }) => (
-  <Text
-    color="white"
-    backgroundColor="primary"
-    style={{ maxWidth: 80 }}
-    {...props}
-  />
-);
-
-const RespositoryItem = ({ repository }) => {
+const RepositoryItem = ({ repository }) => {
   const {
     fullName,
     description,
     language,
-    stargazersCount,
     forksCount,
-    reviewCount,
+    stargazersCount,
     ratingAverage,
+    reviewCount,
     ownerAvatarUrl,
   } = repository;
+
   return (
-    <View style={styles.itemContainer}>
-      <View style={styles.itemContent}>
-        <Image style={styles.ownerAvatar} source={{ uri: ownerAvatarUrl }} />
-        <View>
-          <SubHeadText>{fullName}</SubHeadText>
-          <View style={styles.description}>
-            <Text>{description}</Text>
-          </View>
-          <LanguageText>{language}</LanguageText>
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <View style={styles.avatarContainer}>
+          <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+        </View>
+        <View style={styles.contentContainer}>
+          <Text
+            style={styles.nameText}
+            fontWeight="bold"
+            fontSize="subheading"
+            numberOfLines={1}
+          >
+            {fullName}
+          </Text>
+          <Text style={styles.descriptionText} color="textSecondary">
+            {description}
+          </Text>
+          {language ? (
+            <View style={styles.languageContainer}>
+              <Text style={styles.languageText}>{language}</Text>
+            </View>
+          ) : null}
         </View>
       </View>
-      <View style={styles.itemScore}>
-        <View>
-          <SubHeadText>{`${(stargazersCount / 1000).toFixed(1)}K`}</SubHeadText>
-          <Text>Stars</Text>
-        </View>
-        <View>
-          <SubHeadText>{`${(forksCount / 1000).toFixed()}K`}</SubHeadText>
-          <Text>Forks</Text>
-        </View>
-        <View>
-          <SubHeadText>{reviewCount}</SubHeadText>
-          <Text>Reviews</Text>
-        </View>
-        <View>
-          <SubHeadText>{ratingAverage}</SubHeadText>
-          <Text>Rating</Text>
-        </View>
+      <View style={styles.bottomContainer}>
+        <CountItem count={stargazersCount} label="Stars" />
+        <CountItem count={forksCount} label="Forks" />
+        <CountItem count={reviewCount} label="Reviews" />
+        <CountItem count={ratingAverage} label="Rating" />
       </View>
     </View>
   );
 };
-export default RespositoryItem;
+
+export default RepositoryItem;

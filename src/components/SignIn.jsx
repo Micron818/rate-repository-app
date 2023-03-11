@@ -1,55 +1,47 @@
-import { Pressable, View } from 'react-native';
-import FormikTextInput from './FormikTextInput';
+import { StyleSheet, View } from 'react-native';
 import { Formik } from 'formik';
-import Text from './Text';
-import { StyleSheet } from 'react-native-web';
-import theme from '../theme';
 import * as yup from 'yup';
+
+import Button from './Button';
+import FormikTextInput from './FormikTextInput';
 
 const styles = StyleSheet.create({
   container: {
-    margin: 12,
+    backgroundColor: 'white',
+    padding: 15,
   },
-  signIn: {
-    alignItems: 'center',
-    backgroundColor: theme.colors.primary,
-    padding: 10,
-    borderRadius: 5,
+  fieldContainer: {
+    marginBottom: 15,
   },
 });
 
 const initialValues = {
-  name: '',
+  username: '',
   password: '',
 };
 
-const SignInForm = () => {
-  const onSubmit = (values) => {
-    console.log(values);
-  };
+const validationSchema = yup.object().shape({
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required'),
+});
+
+const SignInForm = ({ onSubmit }) => {
   return (
     <View style={styles.container}>
-      <FormikTextInput name="name" placeholder="user name" />
-      <FormikTextInput name="password" placeholder="password" secureTextEntry />
-      <Pressable onPress={onSubmit} style={styles.signIn}>
-        <Text color="white" fontSize="subheading">
-          SignIn
-        </Text>
-      </Pressable>
+      <View style={styles.fieldContainer}>
+        <FormikTextInput name="username" placeholder="Username" />
+      </View>
+      <View style={styles.fieldContainer}>
+        <FormikTextInput
+          name="password"
+          placeholder="Password"
+          secureTextEntry
+        />
+      </View>
+      <Button onPress={onSubmit}>Sign in</Button>
     </View>
   );
 };
-
-const validateSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required('name is required')
-    .min(3, 'name length must be greater 3'),
-  password: yup
-    .string()
-    .required('password is required')
-    .min(5, 'name length must be greater 5'),
-});
 
 const SignIn = () => {
   const onSubmit = (values) => {
@@ -60,7 +52,7 @@ const SignIn = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
-      validationSchema={validateSchema}
+      validationSchema={validationSchema}
     >
       {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
     </Formik>
