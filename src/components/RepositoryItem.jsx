@@ -16,14 +16,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    // flexShrink: 1,
-    // flexWrap: 'wrap',
-    // alignContent: 'stretch',
-    // alignItems: 'stretch',
-    // flexDirection: 'row',
-    // flexGrow: 1,
-    inlineSize: 300,
-    // backgroundColor: 'yellow',
+    maxWidth: 300,
   },
   ownerAvatar: {
     width: 50,
@@ -40,7 +33,7 @@ const LanguageText = ({ ...props }) => (
   <Text
     color="white"
     backgroundColor="primary"
-    style={{ width: 100 }}
+    style={{ maxWidth: 80 }}
     {...props}
   />
 );
