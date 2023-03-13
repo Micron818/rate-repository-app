@@ -27,6 +27,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7526fb45-8038-4d7e-b193-e44370f35783"
+      }
+    },
+    "owner": "michael.zhang"
   }
 }
