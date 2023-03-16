@@ -4,6 +4,8 @@ import { Link } from 'react-router-native';
 
 import theme from '../theme';
 import Text from './Text';
+import useMe from '../hooks/useMe';
+import useSignOut from '../hooks/useSignout';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,12 +42,28 @@ const AppBarTab = ({ children, ...props }) => {
   );
 };
 
+const AppBarSignIn = () => <AppBarTab to="/sign-in">Sign in</AppBarTab>;
+
+const AppBarSignOut = () => {
+  const [signOut] = useSignOut();
+  return <AppBarTab onPress={signOut}>Sign out</AppBarTab>;
+};
+
+const Loading = () => <AppBarTab>Loading</AppBarTab>;
+
 const AppBar = () => {
+  const { data, loading } = useMe();
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} horizontal>
         <AppBarTab to="/">Repositories</AppBarTab>
-        <AppBarTab to="/sign-in">Sign in</AppBarTab>
+        {loading ? (
+          <Loading />
+        ) : data?.me ? (
+          <AppBarSignOut />
+        ) : (
+          <AppBarSignIn />
+        )}
       </ScrollView>
     </View>
   );
