@@ -1,0 +1,1 @@
+upgraded expo SDK to 46.0.20 and references react version to 18 for support Expo Go  mobile phone version, but has a warn ReactDOM.render is no longer supported in React 18, waiting expo official fixed package.
