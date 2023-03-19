@@ -1,8 +1,10 @@
-import { View, Image, StyleSheet } from 'react-native';
+import * as Linking from 'expo-linking';
+import { Image, StyleSheet, View } from 'react-native';
 
 import theme from '../theme';
-import Text from './Text';
 import formatInThousands from '../utils/formatInThousands';
+import Button from './Button';
+import Text from './Text';
 
 const styles = StyleSheet.create({
   container: {
@@ -57,20 +59,19 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 6,
   },
+  display: (visible) => ({ display: visible ? 'flex' : 'none' }),
 });
 
-const CountItem = ({ label, count }) => {
-  return (
-    <View style={styles.countItem}>
-      <Text style={styles.countItemCount} fontWeight="bold">
-        {formatInThousands(count)}
-      </Text>
-      <Text color="textSecondary">{label}</Text>
-    </View>
-  );
-};
+const CountItem = ({ label, count }) => (
+  <View style={styles.countItem}>
+    <Text style={styles.countItemCount} fontWeight="bold">
+      {formatInThousands(count)}
+    </Text>
+    <Text color="textSecondary">{label}</Text>
+  </View>
+);
 
-const RepositoryItem = ({ repository }) => {
+const RepositoryItem = ({ repository, showOpenLink }) => {
   const {
     fullName,
     description,
@@ -80,6 +81,7 @@ const RepositoryItem = ({ repository }) => {
     ratingAverage,
     reviewCount,
     ownerAvatarUrl,
+    url,
   } = repository;
 
   return (
@@ -87,6 +89,7 @@ const RepositoryItem = ({ repository }) => {
       <View style={styles.topContainer}>
         <View style={styles.avatarContainer}>
           <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+          {/* <Text source={{ uri: ownerAvatarUrl }} style={styles.avatar} /> */}
         </View>
         <View style={styles.contentContainer}>
           <Text
@@ -112,6 +115,9 @@ const RepositoryItem = ({ repository }) => {
         <CountItem count={forksCount} label="Forks" />
         <CountItem count={reviewCount} label="Reviews" />
         <CountItem count={ratingAverage} label="Rating" />
+      </View>
+      <View style={styles.display(showOpenLink)}>
+        <Button onPress={() => Linking.openURL(url)}>Open in GitHub</Button>
       </View>
     </View>
   );

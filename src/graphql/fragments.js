@@ -18,5 +18,19 @@ export const REPOSITORY_FIELDS = gql`
     description
     language
     userHasReviewed
+    reviews {
+      edges {
+        node {
+          id
+          text
+          rating
+          createdAt
+          user {
+            id
+            username
+          }
+        }
+      }
+    }
   }
 `;
