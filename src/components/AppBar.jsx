@@ -60,7 +60,10 @@ const AppBar = () => {
         {loading ? (
           <Loading />
         ) : data?.me ? (
-          <AppBarSignOut />
+          <>
+            <AppBarTab to="/createReview">Create a review</AppBarTab>
+            <AppBarSignOut />
+          </>
         ) : (
           <AppBarSignIn />
         )}

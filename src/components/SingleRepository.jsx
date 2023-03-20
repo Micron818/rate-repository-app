@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: 'white',
-    paddingHorizontal: 15,
+    padding: 10,
   },
   contentContainer: {
     flexGrow: 1,
@@ -25,8 +25,11 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: theme.colors.primary,
     borderWidth: 3,
+    aspectRatio: 1,
     borderRadius: '50%',
     alignSelf: 'flex-start',
+    justifyContent: 'center',
+    textAlign: 'center',
   },
   text: {
     flexGrow: 1,
@@ -45,7 +48,9 @@ const ReviewItem = ({ review: { node } }) => {
         <Text
           fontWeight="bold"
           fontSize="subheading"
-          style={{ color: theme.colors.primary }}
+          style={{
+            color: theme.colors.primary,
+          }}
         >
           {node.rating}
         </Text>
