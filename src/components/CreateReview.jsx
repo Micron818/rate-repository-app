@@ -35,17 +35,12 @@ const CreateReviewContainer = ({ onSubmit }) => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, actions) => {
-        return onSubmit(
-          { ...values, rating: parseInt(values.rating) },
-          actions
-        );
-      }}
+      onSubmit={(values, actions) =>
+        onSubmit({ ...values, rating: parseInt(values.rating) }, actions)
+      }
       validationSchema={validationSchema}
     >
-      {({ handleSubmit }) => {
-        return <CreateReviewForm onSubmit={handleSubmit} />;
-      }}
+      {({ handleSubmit }) => <CreateReviewForm onSubmit={handleSubmit} />}
     </Formik>
   );
 };
@@ -97,10 +92,10 @@ const CreateReviewForm = ({ onSubmit }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    paddingHorizontal: 15,
+    padding: 10,
   },
   fieldContainer: {
-    marginTop: 15,
+    marginVertical: 10,
   },
 });
 

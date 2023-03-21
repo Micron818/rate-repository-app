@@ -1,11 +1,11 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Link } from 'react-router-native';
 
-import theme from '../theme';
-import Text from './Text';
 import useMe from '../hooks/useMe';
 import useSignOut from '../hooks/useSignout';
+import theme from '../theme';
+import Text from './Text';
 
 const styles = StyleSheet.create({
   container: {
@@ -42,31 +42,20 @@ const AppBarTab = ({ children, ...props }) => {
   );
 };
 
-const AppBarSignIn = () => <AppBarTab to="/sign-in">Sign in</AppBarTab>;
-
-const AppBarSignOut = () => {
-  const [signOut] = useSignOut();
-  return <AppBarTab onPress={signOut}>Sign out</AppBarTab>;
-};
-
 const Loading = () => <AppBarTab>Loading</AppBarTab>;
 
 const AppBar = () => {
+  const [signOut] = useSignOut();
   const { data, loading } = useMe();
+  if (loading) return <Loading />;
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} horizontal>
         <AppBarTab to="/">Repositories</AppBarTab>
-        {loading ? (
-          <Loading />
-        ) : data?.me ? (
-          <>
-            <AppBarTab to="/createReview">Create a review</AppBarTab>
-            <AppBarSignOut />
-          </>
-        ) : (
-          <AppBarSignIn />
-        )}
+        {data?.me && <AppBarTab to="createReview">Create a review</AppBarTab>}
+        {data?.me && <AppBarTab onPress={signOut}>Sign Out</AppBarTab>}
+        {!data?.me && <AppBarTab to="signIn">Sign In</AppBarTab>}
+        {!data?.me && <AppBarTab to="signOn">Sign On</AppBarTab>}
       </ScrollView>
     </View>
   );
