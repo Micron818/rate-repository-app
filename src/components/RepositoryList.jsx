@@ -5,29 +5,28 @@ import useRepositories from '../hooks/useRepositories';
 
 import RepositoryItem from './RepositoryItem';
 import { useState } from 'react';
+import theme from '../theme';
 
-const styles = StyleSheet.create({
-  separator: {
-    height: 10,
-  },
-});
-
-const ItemSeparator = () => <View style={styles.separator} />;
+const ItemSeparator = () => {
+  return (
+    <View
+      style={{
+        height: 10,
+      }}
+    />
+  );
+};
 
 const ListHeader = () => {
   const [selectedSort, setSelectedSort] = useState();
-  const [isPickerFocused, setIsPickerFocused] = useState();
-  const styles = StyleSheet.create({
+  const pickerStyle = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
       justifyContent: 'center',
     },
-    pickerStyles: {
-      width: '70%',
-      backgroundColor: 'gray',
-      color: 'white',
+    item: {
+      color: 'red',
+      padding: 15,
+      fontSize: theme.fontSizes.subheading,
     },
   });
 
@@ -35,7 +34,7 @@ const ListHeader = () => {
     {
       key: 'CREATED_AT_DESC',
       value: { CREATED_AT: 'DESC' },
-      label: 'Latest repositories',
+      label: 'Latest repositories test',
     },
     {
       key: 'RATING_AVERAGE_DESC',
@@ -49,46 +48,41 @@ const ListHeader = () => {
     },
   ];
 
-  const handleFocus = (focus) => setIsPickerFocused(focus);
-
+  const [value, setValue] = useState('key1');
   return (
-    <View style={styles.container}>
-      <Picker
-        mode="dialog"
-        placeholder="Select an item..."
-        prompt="Pick one, just one"
-        style={styles.pickerStyles}
-        selectedValue={selectedSort}
-        onValueChange={(itemValue) => setSelectedSort(itemValue)}
-        onBlur={() => handleFocus(false)}
-        onFocus={() => handleFocus(true)}
-      >
-        {sorts.map(({ key, label, value }) => (
-          <Picker.Item key={key} label={label} value={value} />
-        ))}
-      </Picker>
-    </View>
-  );
-};
+    <Picker
+      // mode="dialog"
+      // placeholder="Select an item..."
+      // style={pickerStyle.container}
+      // itemStyle={pickerStyle.item}
+      // selectedValue={selectedSort}
+      // onValueChange={(itemValue) => setSelectedSort(itemValue)}
 
-export const RepositoryListContainer = ({ repositories }) => {
-  const navigate = useNavigate();
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
-    : [];
-
-  return (
-    <FlatList
-      data={repositoryNodes}
-      keyExtractor={({ id }) => id}
-      renderItem={({ item }) => (
-        <Pressable onPress={() => navigate(`${item.id}`)}>
-          <RepositoryItem repository={item} showOpenLink={false} />
-        </Pressable>
-      )}
-      ItemSeparatorComponent={ItemSeparator}
-      ListHeaderComponent={ListHeader}
-    />
+      testID="styled-picker"
+      selectedValue={value}
+      onValueChange={(v) => setValue(v)}
+      accessibilityLabel="Styled Picker Accessibility Label"
+    >
+      <Picker.Item
+        label="Sin"
+        value="key0"
+        style={{ backgroundColor: 'cyan', color: 'red' }}
+      />
+      <Picker.Item
+        label="Cos"
+        value="key1"
+        color="green"
+        style={{ backgroundColor: 'cyan', fontSize: 36 }}
+      />
+      <Picker.Item
+        label="Tan"
+        value="key2"
+        style={{ backgroundColor: 'blue', fontFamily: 'serif', color: 'white' }}
+      />
+      {/* {sorts.map(({ key, label, value }) => (
+        <Picker.Item key={key} label={label} value={value} />
+      ))} */}
+    </Picker>
   );
 };
 
@@ -114,4 +108,4 @@ const RepositoryList = () => {
   );
 };
 
-export default RepositoryList;
+export default ListHeader;

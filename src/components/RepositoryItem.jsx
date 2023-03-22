@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
     paddingVertical: 3,
     paddingHorizontal: 6,
   },
-  display: (visible) => ({ display: visible ? 'flex' : 'none' }),
 });
 
 const CountItem = ({ label, count }) => (
@@ -116,7 +115,7 @@ const RepositoryItem = ({ repository, showOpenLink }) => {
         <CountItem count={reviewCount} label="Reviews" />
         <CountItem count={ratingAverage} label="Rating" />
       </View>
-      <View style={styles.display(showOpenLink)}>
+      <View style={{ display: showOpenLink ? 'flex' : 'none' }}>
         <Button onPress={() => Linking.openURL(url)}>Open in GitHub</Button>
       </View>
     </View>
