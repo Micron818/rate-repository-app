@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Menu, Searchbar } from 'react-native-paper';
+import { useDebouncedCallback } from 'use-debounce';
 
 const RepositoryListHeader = ({ setSort, setSearchKeyword }) => {
   const [visible, setVisible] = useState(false);
@@ -42,9 +43,13 @@ const RepositoryListHeader = ({ setSort, setSearchKeyword }) => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const debouncedSearch = useDebouncedCallback((query) => {
+    setSearchKeyword(query);
+  }, 500);
+
   const onChangeSearch = (query) => {
     setSearchQuery(query);
-    setSearchKeyword(query);
+    debouncedSearch(query);
   };
 
   return (
