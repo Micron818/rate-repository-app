@@ -1,5 +1,5 @@
 import * as Linking from 'expo-linking';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 
 import theme from '../theme';
 import formatInThousands from '../utils/formatInThousands';
@@ -9,7 +9,8 @@ import Text from './Text';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    padding: 15,
+    padding: 10,
+    flex: 1,
   },
   topContainer: {
     flexDirection: 'row',
@@ -87,8 +88,8 @@ const RepositoryItem = ({ repository, showOpenLink }) => {
     <View style={styles.container} testID="repositoryItem">
       <View style={styles.topContainer}>
         <View style={styles.avatarContainer}>
-          {/* <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} /> */}
-          <Text source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+          <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+          {/* <Text source={{ uri: ownerAvatarUrl }} style={styles.avatar} /> */}
         </View>
         <View style={styles.contentContainer}>
           <Text
