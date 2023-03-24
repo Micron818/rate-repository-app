@@ -4,7 +4,7 @@ import { Provider } from 'react-native-paper';
 import { useNavigate } from 'react-router-native';
 import useRepositories from '../hooks/useRepositories';
 import RepositoryItem from './RepositoryItem';
-import RepositoryListSelectSort from './RepositoryListSelectSort';
+import RepositoryListHeader from './RepositoryListHeader';
 
 const styles = StyleSheet.create({
   separator: {
@@ -19,8 +19,13 @@ const RepositoryList = () => {
     orderBy: 'CREATED_AT',
     orderDirection: 'ASC',
   });
-  const repositories = useRepositories(sort);
+
+  const [searchKeyword, setSearchKeyword] = useState('');
+
+  const repositories = useRepositories(sort, searchKeyword);
+
   const navigate = useNavigate();
+
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
@@ -36,7 +41,12 @@ const RepositoryList = () => {
           </Pressable>
         )}
         ItemSeparatorComponent={ItemSeparator}
-        ListHeaderComponent={<RepositoryListSelectSort setSort={setSort} />}
+        ListHeaderComponent={
+          <RepositoryListHeader
+            setSort={setSort}
+            setSearchKeyword={setSearchKeyword}
+          />
+        }
       />
     </Provider>
   );
