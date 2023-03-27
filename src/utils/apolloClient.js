@@ -1,15 +1,26 @@
 import {
   ApolloClient,
-  InMemoryCache,
   createHttpLink,
   from,
+  InMemoryCache,
 } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
-import Constants from 'expo-constants';
 import { setContext } from '@apollo/client/link/context';
+import { onError } from '@apollo/client/link/error';
+import { relayStylePagination } from '@apollo/client/utilities';
+import Constants from 'expo-constants';
 
 const httpLink = createHttpLink({
   uri: Constants.manifest.extra.apolloUri,
+});
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        repositories: relayStylePagination(),
+      },
+    },
+  },
 });
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -41,7 +52,6 @@ const createApolloClient = (authStorage) => {
   });
 
   return new ApolloClient({
-    // link: httpLink,
     link: from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
   });

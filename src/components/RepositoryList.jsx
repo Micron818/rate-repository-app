@@ -14,21 +14,36 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
+const getRepositoryListHeader = (setSort, setSearchKeyword) => (
+  <RepositoryListHeader setSort={setSort} setSearchKeyword={setSearchKeyword} />
+);
+
 const RepositoryList = () => {
   const [sort, setSort] = useState({
     orderBy: 'CREATED_AT',
     orderDirection: 'ASC',
   });
 
+  const navigate = useNavigate();
+
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  const repositories = useRepositories(sort, searchKeyword);
+  const { repositories, fetchMore, loading } = useRepositories({
+    ...sort,
+    searchKeyword,
+    first: 8,
+  });
 
-  const navigate = useNavigate();
+  if (loading) return <>Loading...</>;
 
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
+
+  const onEndReach = () => {
+    console.log('you are reached the end of the list');
+    fetchMore();
+  };
 
   return (
     <Provider>
@@ -41,12 +56,15 @@ const RepositoryList = () => {
           </Pressable>
         )}
         ItemSeparatorComponent={ItemSeparator}
+        // ListHeaderComponent={getRepositoryListHeader(setSort, setSearchKeyword)}
         ListHeaderComponent={
           <RepositoryListHeader
             setSort={setSort}
             setSearchKeyword={setSearchKeyword}
           />
         }
+        // onEndReached={onEndReach}
+        // onEndReachedThreshold={0.5}
       />
     </Provider>
   );
