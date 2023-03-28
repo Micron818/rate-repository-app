@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { Provider } from 'react-native-paper';
-import { useNavigate } from 'react-router-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useRepositories from '../hooks/useRepositories';
 import RepositoryItem from './RepositoryItem';
 import RepositoryListHeader from './RepositoryListHeader';
@@ -14,58 +14,44 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const getRepositoryListHeader = (setSort, setSearchKeyword) => (
-  <RepositoryListHeader setSort={setSort} setSearchKeyword={setSearchKeyword} />
-);
-
 const RepositoryList = () => {
   const [sort, setSort] = useState({
     orderBy: 'CREATED_AT',
     orderDirection: 'ASC',
   });
 
-  const navigate = useNavigate();
-
   const [searchKeyword, setSearchKeyword] = useState('');
 
-  const { repositories, fetchMore, loading } = useRepositories({
+  const { repositories, loading, error, fetchMore } = useRepositories({
     ...sort,
     searchKeyword,
     first: 8,
   });
 
-  if (loading) return <>Loading...</>;
-
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
-    : [];
-
-  const onEndReach = () => {
-    console.log('you are reached the end of the list');
-    fetchMore();
-  };
+  // uncomment the following line, would raise re-render,and loss inputed data in HeaderComponent
+  // if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
 
   return (
     <Provider>
-      <FlatList
-        data={repositoryNodes}
-        keyExtractor={({ id }) => id}
-        renderItem={({ item }) => (
-          <Pressable onPress={() => navigate(`${item.id}`)}>
-            <RepositoryItem repository={item} showOpenLink={false} />
-          </Pressable>
-        )}
-        ItemSeparatorComponent={ItemSeparator}
-        // ListHeaderComponent={getRepositoryListHeader(setSort, setSearchKeyword)}
-        ListHeaderComponent={
-          <RepositoryListHeader
-            setSort={setSort}
-            setSearchKeyword={setSearchKeyword}
-          />
-        }
-        // onEndReached={onEndReach}
-        // onEndReachedThreshold={0.5}
-      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <FlatList
+          data={repositories?.edges}
+          keyExtractor={({ cursor }) => cursor}
+          renderItem={({ item }) => (
+            <RepositoryItem repository={item.node} showOpenLink={false} />
+          )}
+          ItemSeparatorComponent={ItemSeparator}
+          ListHeaderComponent={
+            <RepositoryListHeader
+              setSort={setSort}
+              setSearchKeyword={setSearchKeyword}
+            />
+          }
+          onEndReached={fetchMore}
+          onEndReachedThreshold={0.5}
+        />
+      </SafeAreaView>
     </Provider>
   );
 };

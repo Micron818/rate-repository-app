@@ -81,6 +81,7 @@ const RepositoryListHeader = ({ setSort, setSearchKeyword }) => {
             onPress={() => {
               setSelect(label);
               setSort(value);
+              closeMenu();
             }}
           />
         ))}

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const REPOSITORY_FIELDS = gql`
+const REPOSITORY_FIELDS = gql`
   fragment RepositoryFields on Repository {
     id
     ownerName
@@ -18,19 +18,61 @@ export const REPOSITORY_FIELDS = gql`
     description
     language
     userHasReviewed
-    reviews {
-      edges {
-        node {
+  }
+`;
+
+const PAGE_INFRO = gql`
+  fragment PageInfoFields on PageInfo {
+    hasPreviousPage
+    hasNextPage
+    startCursor
+    endCursor
+  }
+`;
+
+const REVIEWS = gql`
+  ${PAGE_INFRO}
+  fragment ReviewsField on ReviewConnection {
+    edges {
+      node {
+        id
+        text
+        rating
+        createdAt
+        user {
           id
-          text
-          rating
-          createdAt
-          user {
-            id
-            username
-          }
+          username
         }
       }
+      cursor
+    }
+    pageInfo {
+      ...PageInfoFields
     }
   }
 `;
+
+const REPOSITORIES = gql`
+  ${PAGE_INFRO}
+  ${REPOSITORY_FIELDS}
+  fragment RepositoryConnection on RepositoryConnection {
+    edges {
+      cursor
+      node {
+        ...RepositoryFields
+      }
+    }
+    pageInfo {
+      ...PageInfoFields
+    }
+  }
+`;
+
+const REPOSITORY = gql`
+  ${REPOSITORY_FIELDS}
+  fragment Repository on Repository {
+    ...RepositoryFields
+  }
+`;
+
+export { REPOSITORIES, REPOSITORY, REVIEWS };

@@ -1,5 +1,6 @@
 import * as Linking from 'expo-linking';
-import { StyleSheet, View, Image } from 'react-native';
+import { StyleSheet, View, Image, Pressable } from 'react-native';
+import { useNavigate } from 'react-router-native';
 
 import theme from '../theme';
 import formatInThousands from '../utils/formatInThousands';
@@ -72,7 +73,10 @@ const CountItem = ({ label, count }) => (
 );
 
 const RepositoryItem = ({ repository, showOpenLink }) => {
+  const navigate = useNavigate();
+
   const {
+    id,
     fullName,
     description,
     language,
@@ -86,30 +90,32 @@ const RepositoryItem = ({ repository, showOpenLink }) => {
 
   return (
     <View style={styles.container} testID="repositoryItem">
-      <View style={styles.topContainer}>
-        <View style={styles.avatarContainer}>
-          {/* <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} /> */}
-          <Text source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+      <Pressable onPress={() => navigate(`${id}`)}>
+        <View style={styles.topContainer}>
+          <View style={styles.avatarContainer}>
+            {/* <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} /> */}
+            <Text source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+          </View>
+          <View style={styles.contentContainer}>
+            <Text
+              style={styles.nameText}
+              fontWeight="bold"
+              fontSize="subheading"
+              numberOfLines={1}
+            >
+              {fullName}
+            </Text>
+            <Text style={styles.descriptionText} color="textSecondary">
+              {description}
+            </Text>
+            {language ? (
+              <View style={styles.languageContainer}>
+                <Text style={styles.languageText}>{language}</Text>
+              </View>
+            ) : null}
+          </View>
         </View>
-        <View style={styles.contentContainer}>
-          <Text
-            style={styles.nameText}
-            fontWeight="bold"
-            fontSize="subheading"
-            numberOfLines={1}
-          >
-            {fullName}
-          </Text>
-          <Text style={styles.descriptionText} color="textSecondary">
-            {description}
-          </Text>
-          {language ? (
-            <View style={styles.languageContainer}>
-              <Text style={styles.languageText}>{language}</Text>
-            </View>
-          ) : null}
-        </View>
-      </View>
+      </Pressable>
       <View style={styles.bottomContainer}>
         <CountItem count={stargazersCount} label="Stars" />
         <CountItem count={forksCount} label="Forks" />

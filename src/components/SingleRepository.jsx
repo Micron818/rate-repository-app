@@ -71,8 +71,11 @@ const ReviewItem = ({ review: { node } }) => {
 const ItemSeparator = () => <View style={styles.separator} />;
 
 const SingleRepository = () => {
-  const { id: repositoryId } = useParams();
-  const { repository, loading, error } = useRepository({ repositoryId });
+  const { id } = useParams();
+  const { repository, loading, error, fetchMore } = useRepository({
+    repositoryId: id,
+    reviewsFirst: 3,
+  });
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
 
@@ -83,8 +86,10 @@ const SingleRepository = () => {
       data={reviews}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ node: { id } }) => id}
-      ListHeaderComponent={() => <RepositoryInfo repository={repository} />}
+      ListHeaderComponent={<RepositoryInfo repository={repository} />}
       ItemSeparatorComponent={ItemSeparator}
+      onEndReached={fetchMore}
+      onEndReachedThreshold={0.5}
     />
   );
 };
